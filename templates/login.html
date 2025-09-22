@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Fake Video Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css1/style.css') }}">
+    <style>
+
+        .form-container {
+    width: 400px;
+    margin: 100px auto;
+    background: #3A78AD;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.tab-switch {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tab-switch a {
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin: 0 5px;
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+}
+
+.active-tab {
+    background: white;
+    color: #4682B4; /* add this to make active tab text visible */
+}
+
+.login-btn {
+    background-color: #4682B4;
+    color: black;
+    padding: 10px 20px;       /* wider padding for rounded shape */
+    border: none;
+    margin: 0 5px;
+    width: 100%;
+    border-radius: 20px;      /* larger radius for pill shape */
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.login-btn:hover {
+    background-color: white;
+    color: black;
+}
+
+    </style>
+</head>
+<body>
+    <div class="header" style="background-color: #4682B4; padding: 15px 30px;">
+        <span class="logo">DeepFake Video Detection</span>
+        <div class="nav" style="float: right;">
+            <a href="/" style="margin-right: 20px; color: black;">Home</a>
+            <a href="/login" style="color: black;">Login</a>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <div class="tab-switch">
+            <a href="/login" class="active-tab">Login</a>
+            <a href="/register">Registration</a>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <ul class="flashes">
+              {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        <!-- Forgot Password Link -->
+        {% if show_forgot %}
+    <div style="margin-top: 10px; text-align: center;">
+        <a href="{{ url_for('forgot_password') }}" style="color: black; text-decoration: none;">Forgot password?</a>
+    </div>
+{% endif %}
+
+        <form method="POST">
+            <input type="email" name="email" placeholder="Email address" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </div>
+</body>
+</html>

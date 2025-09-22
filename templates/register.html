@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - Fake Video Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css1/style.css') }}">
+    <style>
+        .form-container {
+    width: 400px;
+    margin: 100px auto;
+    background: #4682B4;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.tab-switch {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tab-switch a {
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin: 0 5px;
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+}
+
+.active-tab {
+    background: white;
+    color: #4682B4; /* add this to make active tab text visible */
+}
+
+        .register-btn {
+    background-color: #4682B4;
+    color: black;
+    padding: 10px 20px;       /* wider padding for rounded shape */
+    border: none;
+    margin: 0 5px;
+    width: 100%;
+    border-radius: 20px;      /* larger radius for pill shape */
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.register-btn:hover {
+    background-color: white;
+    color: black;
+}
+
+.password-rules {
+    font-size: 12px;
+    color: black;
+    margin-top: -5px;
+    margin-bottom: 10px;
+}
+
+/* Optional: Add hover effect to tabs */
+
+.tab-switch a:hover {
+    background-color: #b0c4de;
+    color: white;
+}
+
+    </style>
+</head>
+<body>
+    <div class="header" style="background-color: #4682B4; padding: 15px 30px;">
+        <span class="logo">DeepFake Video Detection</span>
+        <div class="nav" style="float: right;">
+            <a href="/" style="margin-right: 20px; color: black;">Home</a>
+            <a href="/login" style="color: black;">Login</a>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <div class="tab-switch">
+            <a href="/login">Login</a>
+            <a href="/register" class="active-tab">Registration</a>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <ul class="flashes">
+              {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/register">
+            <input type="email" name="email" placeholder="Email address" required>
+
+            <input type="password" name="password" id="password" placeholder="Password" required
+                   pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}"
+                   title="At least 8 characters, with uppercase, lowercase, number, and special character.">
+            <div id="passwordHelp" class="password-rules"></div>
+
+            <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+
+            <button type="submit" class="register-btn">Register</button>
+        </form>
+    </div>
+
+    <script>
+        const passwordField = document.getElementById("password");
+        const helpText = document.getElementById("passwordHelp");
+
+        passwordField.addEventListener("input", () => {
+            const password = passwordField.value;
+            const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+            if (!regex.test(password)) {
+                helpText.textContent = "Must include 8+ chars, uppercase, lowercase, number, and symbol.";
+            } else {
+                helpText.textContent = "";
+            }
+        });
+    </script>
+</body>
+</html>

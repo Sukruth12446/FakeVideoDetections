@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Result Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+        }
+
+        .header-bar {
+            background-color: #4682B4;
+            height: 50px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-links a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 50px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+            padding: 0 20px;
+        }
+
+        .prediction {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        video, img {
+            width: 360px;
+            height: auto;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .upload-btn {
+            background-color: #4682B4;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 30px;
+            font-weight: bold;
+            font-size: 16px;
+            color: black;
+            box-shadow: 0 0 10px #f7c94899;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background-color: #f7e289;
+        }
+
+        .features-section {
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .features-section h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .features-section ul {
+            padding-left: 20px;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-bar">
+    <div class="nav-links">
+        <a href="/result?prediction={{ prediction }}&filename={{ filename }}">Result</a>
+        <a href="/upload">Upload</a>
+        <a href="/logout">LogOut</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- Video/Image + Upload Section -->
+    <div>
+        <div class="prediction">
+            Prediction: {{ prediction }}
+            {% if filename.rsplit('.', 1)[1].lower() in ['mp4', 'avi', 'mov'] and confidence %}
+                (Confidence: {{ confidence }})
+            {% endif %}
+        </div>
+
+        {% set ext = filename.rsplit('.', 1)[1].lower() %}
+        {% if ext in ['mp4', 'avi', 'mov'] %}
+            <video controls>
+                <source src="{{ video_url }}" type="video/{{ ext }}">
+                Your browser does not support the video tag.
+            </video>
+        {% elif ext in ['jpg', 'jpeg', 'png'] %}
+            <img src="{{ video_url }}" alt="Uploaded Image" />
+        {% else %}
+            <p>Unsupported file format.</p>
+        {% endif %}
+
+        <form action="/upload" method="get">
+            <button class="upload-btn" type="submit">Upload File</button>
+        </form>
+    </div>
+
+    <!-- Feature Explanation Section -->
+    <div class="features-section">
+        <h3>Feature-Based Explanation</h3>
+        <ul>
+            {% for feature in features %}
+                <li>{{ feature }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</div>
+
+</body>
+</html>

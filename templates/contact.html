@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Us</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css1/style.css') }}">
+</head>
+<body>
+
+    <!-- Header (same as home) -->
+    <div class="header">
+        <span class="logo">DeepFake Video Detection</span>
+        <div class="nav">
+            <a href="/">Home</a>
+            <a href="/contact">Contact</a>
+        </div>
+    </div>
+
+    <!-- Main Contact Info -->
+    <div class="contact-content">
+        <h1>Contact Us</h1>
+        <p>If you have any questions or concerns, feel free to reach out!</p>
+    </div>
+
+    <!-- Team Cards -->
+    <div class="team-container">
+
+        <!-- Team Member 1 -->
+        <div class="team-card">
+            <img src="{{ url_for('static', filename='images/suku.jpg') }}" alt="Sukruth GD">
+            <h3>Student: Sukruth GD</h3>
+            <p>Email-id: sukruthgdgd@gmail.com</p>
+            <p>Mobile no: 9353746668</p>
+        </div>
+
+        <!-- Team Member 2 -->
+        <div class="team-card">
+            <img src="{{ url_for('static', filename='images/tejashwini.jpg') }}" alt="Tejashwini R">
+            <h3>Student: Tejashwini R</h3>
+            <p>Email-id: tejashwini@gmail.com</p>
+            <p>Mobile no: 7353423689</p>
+        </div>
+
+        <!-- Team Member 3 -->
+        <div class="team-card">
+            <img src="{{ url_for('static', filename='images/shravani.jpg') }}" alt="Shravani">
+            <h3>Student: Shravani</h3>
+            <p>Email-id: shravani@gmail.com</p>
+            <p>Mobile no: 7019354567</p>
+        </div>
+
+    </div>
+
+</body>
+</html>
