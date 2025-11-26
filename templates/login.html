@@ -5,74 +5,93 @@
     <title>Login - Fake Video Detection</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css1/style.css') }}">
     <style>
-
         .form-container {
-    width: 400px;
-    margin: 100px auto;
-    background: #3A78AD;
-    padding: 30px;
-    border-radius: 10px;
-}
+            width: 400px;
+            margin: 100px auto;
+            background: #f2f6fa;
+            padding: 30px;
+            border-radius: 10px;
+        }
 
-input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-}
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
 
-.tab-switch {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-}
+        .tab-switch {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
 
-.tab-switch a {
-    padding: 10px 20px;
-    border-radius: 20px;
-    margin: 0 5px;
-    text-decoration: none;
-    font-weight: bold;
-    color: black;
-}
+        .tab-switch a {
+            padding: 10px 20px;
+            border-radius: 20px;
+            margin: 0 5px;
+            text-decoration: none;
+            font-weight: bold;
+            color: black;
+        }
 
-.active-tab {
-    background: white;
-    color: #4682B4; /* add this to make active tab text visible */
-}
+        .active-tab {
+            background: #D3DCE6;
+            color: #4682B4;
+        }
 
-.login-btn {
-    background-color: #4682B4;
-    color: black;
-    padding: 10px 20px;       /* wider padding for rounded shape */
-    border: none;
-    margin: 0 5px;
-    width: 100%;
-    border-radius: 20px;      /* larger radius for pill shape */
-    cursor: pointer;
-    font-weight: bold;
-}
+        .login-btn {
+            background-color: #D3DCE6;
+            color: black;
+            padding: 10px 20px;
+            border: none;
+            margin: 10px 0;
+            width: 100%;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
 
-.login-btn:hover {
-    background-color: white;
-    color: black;
-}
+        .login-btn:hover {
+            background-color: #D3DCE6;
+            color: black;
+        }
 
+        .admin-form {
+            display: none;
+        }
+
+        .user-form {
+            display: block;
+        }
+
+        .clear-btn {
+            background: none;
+            border: none;
+            color: black;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-top: 5px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
-    <div class="header" style="background-color: #4682B4; padding: 15px 30px;">
-        <span class="logo">DeepFake Video Detection</span>
+    <div class="header" style="background-color: white; padding: 15px 30px;">
+        <span class="logo">Login</span>
         <div class="nav" style="float: right;">
             <a href="/" style="margin-right: 20px; color: black;">Home</a>
             <a href="/login" style="color: black;">Login</a>
         </div>
     </div>
 
+
     <div class="form-container">
         <div class="tab-switch">
-            <a href="/login" class="active-tab">Login</a>
+            <a href="javascript:void(0)" class="active-tab" onclick="showUserLogin()">User Login</a>
+            <a href="javascript:void(0)" onclick="showAdminLogin()">Admin Login</a>
             <a href="/register">Registration</a>
         </div>
+
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             <ul class="flashes">
@@ -82,18 +101,84 @@ input {
             </ul>
           {% endif %}
         {% endwith %}
+
+        <!-- User Login Form -->
+        <form method="POST" id="userForm" class="user-form" autocomplete="off">
+            <input type="hidden" name="login_type" value="user">
+            <input type="email" name="email" placeholder="Email address" required autocomplete="off">
+            <input type="password" name="password" placeholder="Password" required autocomplete="new-password">
+            <button type="submit" class="login-btn">Login</button>
+            <div style="text-align: center; margin-top: 10px;">
+                <button type="button" class="clear-btn" onclick="clearUserFields()">Clear Fields</button>
+            </div>
+        </form>
+
+        <!-- Admin Login Form -->
+        <form method="POST" id="adminForm" class="admin-form" autocomplete="off">
+            <input type="hidden" name="login_type" value="admin">
+            <input type="email" name="email" placeholder="Admin Email" required autocomplete="off">
+            <input type="password" name="password" placeholder="Admin Password" required autocomplete="new-password">
+            <button type="submit" class="login-btn">Admin Login</button>
+            <div style="text-align: center; margin-top: 10px;">
+                <button type="button" class="clear-btn" onclick="clearAdminFields()">Clear Fields</button>
+            </div>
+        </form>
+
         <!-- Forgot Password Link -->
         {% if show_forgot %}
-    <div style="margin-top: 10px; text-align: center;">
-        <a href="{{ url_for('forgot_password') }}" style="color: black; text-decoration: none;">Forgot password?</a>
+            <div style="margin-top: 10px; text-align: center;">
+                <a href="{{ url_for('forgot_password') }}" style="color: black; text-decoration: none;">Forgot password?</a>
+            </div>
+        {% endif %}
     </div>
-{% endif %}
 
-        <form method="POST">
-            <input type="email" name="email" placeholder="Email address" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit" class="login-btn">Login</button>
-        </form>
-    </div>
+    <script>
+        function showUserLogin() {
+            document.getElementById('userForm').style.display = 'block';
+            document.getElementById('adminForm').style.display = 'none';
+            // Update active tab
+            document.querySelectorAll('.tab-switch a').forEach(tab => {
+                tab.classList.remove('active-tab');
+            });
+            document.querySelectorAll('.tab-switch a')[0].classList.add('active-tab');
+
+            // Clear user form fields when switching to user login
+            clearUserFields();
+        }
+
+        function showAdminLogin() {
+            document.getElementById('userForm').style.display = 'none';
+            document.getElementById('adminForm').style.display = 'block';
+            // Update active tab
+            document.querySelectorAll('.tab-switch a').forEach(tab => {
+                tab.classList.remove('active-tab');
+            });
+            document.querySelectorAll('.tab-switch a')[1].classList.add('active-tab');
+
+            // Clear admin form fields when switching to admin login
+            clearAdminFields();
+        }
+
+        function clearUserFields() {
+            const userForm = document.getElementById('userForm');
+            userForm.querySelector('input[name="email"]').value = '';
+            userForm.querySelector('input[name="password"]').value = '';
+        }
+
+        function clearAdminFields() {
+            const adminForm = document.getElementById('adminForm');
+            adminForm.querySelector('input[name="email"]').value = '';
+            adminForm.querySelector('input[name="password"]').value = '';
+        }
+
+        // Clear all form fields when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            clearUserFields();
+            clearAdminFields();
+        });
+
+        // Set default to user login
+        showUserLogin();
+    </script>
 </body>
 </html>

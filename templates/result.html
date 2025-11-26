@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>Result Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css1/style.css') }}">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,7 +14,7 @@
         }
 
         .header-bar {
-            background-color: #4682B4;
+            background-color: white;
             height: 50px;
             display: flex;
             justify-content: flex-end;
@@ -90,6 +91,7 @@
 <body>
 
 <div class="header-bar">
+    <span class="logo">Result</span>
     <div class="nav-links">
         <a href="/result?prediction={{ prediction }}&filename={{ filename }}">Result</a>
         <a href="/upload">Upload</a>
@@ -120,9 +122,19 @@
             <p>Unsupported file format.</p>
         {% endif %}
 
-        <form action="/upload" method="get">
-            <button class="upload-btn" type="submit">Upload File</button>
-        </form>
+
+        {% if confidence %}
+<div class="confidence-score mt-3">
+    <h5>Confidence: <strong>{{ confidence }}%</strong></h5>
+    <div class="progress">
+        <div class="progress-bar {% if prediction.upper() == 'FAKE' %}bg-danger{% else %}bg-success{% endif %}"
+             role="progressbar" style="width: {{ confidence }}%"
+             aria-valuenow="{{ confidence }}" aria-valuemin="0" aria-valuemax="100">
+            {{ confidence }}%
+        </div>
+    </div>
+</div>
+{% endif %}
     </div>
 
     <!-- Feature Explanation Section -->

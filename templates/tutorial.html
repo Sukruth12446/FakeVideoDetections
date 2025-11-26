@@ -1,10 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial - DeepFake Detection System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            color: #222;
+            padding: 30px;
+            text-align: center;
+            margin: 0;
+        }
+
+        /* ✅ Top navigation bar */
+        nav {
+            width: 100%;
+            background: white;
+            border-bottom: 3px solid white; /* Cyan line */
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .nav-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: black;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #1d3557;
+            margin-top: 30px;
+        }
+
+        ol {
+            text-align: left;
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            line-height: 1.6;
+            border: 3px solid white;
+        }
+
+        video {
+            width: 80%;
+            max-width: 900px;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            margin-top: 30px;
+            border: 4px solid white;
+        }
+
+        select, button {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            margin: 10px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
-$END$
+
+    <!-- ✅ Navigation Bar -->
+    <nav>
+        <div class="nav-title">DeepFake Image / Video Detection System - Tutorial</div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+        </div>
+    </nav>
+
+    <p>This page will help you understand how to upload images/videos and test them for deepfake detection.</p>
+
+    <h2>🧾 Step-by-Step Instructions:</h2>
+
+    <label for="languageSelect"><b>Select Language for Audio Instructions:</b></label>
+    <select id="languageSelect">
+        <option value="en">English (India)</option>
+        <option value="hi">Hindi (हिन्दी)</option>
+        <option value="kn">Kannada (ಕನ್ನಡ)</option>
+        <option value="ta">Tamil (தமிழ்)</option>
+        <option value="te">Telugu (తెలుగు)</option>
+        <option value="ml">Malayalam (മലയാളം)</option>
+    </select>
+    <button onclick="speakInstructions()">🎧 Listen to Instructions</button>
+
+    <ol id="instructionsText">
+        <li><b>Step 1:</b> Open the web application in your browser using the provided link (e.g., <i>http://127.0.0.1:5000</i>).</li>
+        <li><b>Step 2:</b> Click on Login and registration page appears. Register and log in.</li>
+        <li><b>Step 3:</b> Click on <b>Upload</b> and choose a <b>Video/Image</b> file.</li>
+        <li><b>Step 4:</b> Click on the <b>Submit</b> button to start detection.</li>
+        <li><b>Step 5:</b> Wait a few seconds for the result to appear.</li>
+        <li><b>Step 6:</b> You’ll see whether it’s <b>REAL</b> or <b>FAKE</b>.</li>
+    </ol>
+
+    <h2>🎬 Watch the Tutorial Video</h2>
+    <video controls>
+        <source src="{{ url_for('static', filename='videos/tutorial.mp4') }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <footer>
+        <p>© 2025 DeepFake Detection System | Developed by Sukruth G.D</p>
+    </footer>
+
+    <script>
+    function speakInstructions() {
+        const language = document.getElementById("languageSelect").value;
+        const audio = new Audio(`/speak?lang=${language}`);
+        audio.play();
+    }
+    </script>
 </body>
 </html>
