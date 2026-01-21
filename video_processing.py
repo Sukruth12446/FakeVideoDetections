@@ -8,11 +8,11 @@ import os
 # -----------------------------
 IMG_SIZE = 224
 SEQUENCE_LENGTH = 60
-VIDEO_THRESHOLD = 0.49
-IMAGE_THRESHOLD = 0.45  # tuned threshold for CNN
+VIDEO_THRESHOLD = 0.52
+IMAGE_THRESHOLD = 0.69  # tuned threshold for CNN
 
 # Load pretrained models
-video_model = load_model("model/mobilenet_lstm_improved.h5")
+video_model = load_model("model/mobilenet_lstm_bilstm_v2.h5")
 image_model = load_model("model/mobilenet_image_model.h5")
 
 # Load Haarcascade and fallback DNN detector
@@ -142,49 +142,45 @@ def predict_image(image_path):
         if img is None:
             raise ValueError("Image could not be read.")
 
+        # --- Face detection (simple) ---
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5)
-        if len(faces) > 0:
-            (x, y, w, h) = faces[0]
-        else:
-            dnn_face = detect_face_dnn(img)
-            if dnn_face is not None:
-                (x, y, w, h) = dnn_face
-            else:
-                x, y, w, h = 0, 0, img.shape[1], img.shape[0]
+        faces = face_cascade.detectMultiScale(
+            gray, scaleFactor=1.1, minNeighbors=4, minSize=(100, 100))
 
-        face = img[y:y + h, x:x + w]
+        if len(faces) > 0:
+            x, y, w, h = faces[0]
+            face = img[y:y+h, x:x+w]
+        else:
+            # No face detected → use full image
+            face = img
+
+        # --- EXACT same preprocessing as training ---
         face = cv2.resize(face, (IMG_SIZE, IMG_SIZE))
         face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
-        face = normalize_brightness(face)
-        face = face.astype("float32") / 255.0
+        face = face.astype("float32") / 255.0  # SAME as training
 
-        input_array = np.expand_dims(face, axis=0)
-        preds = image_model.predict(input_array)
-        prediction = preds[0][0]
+        face = np.expand_dims(face, axis=0)
 
-        # Adjust threshold if model outputs low scores for real images
-        dynamic_thresh = get_adaptive_threshold(preds.flatten(), mode="image")
-        if prediction < 0.3:
-            dynamic_thresh = 0.25
-        elif prediction < 0.4:
-            dynamic_thresh = 0.3
+        # --- PREDICTION ---
+        raw = image_model.predict(face)[0][0]
 
-        label = "REAL" if prediction >= dynamic_thresh else "FAKE"
-        confidence = round(float(abs(prediction - 0.5) * 2 * 100), 2)
+        # MobileNet binary output → 0 = fake, 1 = real
+        threshold = 0.67
 
-        print(f"[Image] Prediction: {label} (Confidence: {confidence}%) | Raw={prediction:.4f}, Thresh={dynamic_thresh}")
+        label = "REAL" if raw >= threshold else "FAKE"
+        confidence = round(abs(raw - 0.5) * 2 * 100, 2)
+
+        print(f"[Image] Prediction: {label} | Raw={raw:.4f}")
         return {"label": label, "confidence": confidence}
 
     except Exception as e:
         print(f"❌ Error in image prediction: {e}")
         return {"label": "Error", "confidence": 0.0}
 
-# -----------------------------
 # TESTING (Optional)
 # -----------------------------
 if __name__ == "__main__":
     print("---- Deepfake Detection System ----")
     # Example usage:
     # print(predict_video("uploads/test_video.mp4"))
-    # print(predict_image("uploads/test_image.jpg"))
+    # print(predict_image("uploads/test_image.jpg"))    # print(predict_image(TEST_IMAGE))

@@ -4,7 +4,7 @@ import numpy as np
 import os
 
 # ✅ Load the trained model
-MODEL_PATH = "model/mobilenet_lstm_improved.h5"
+MODEL_PATH = "model/mobilenet_lstm_bilstm_v2.h5"
 model = load_model(MODEL_PATH)
 print("✅ Model loaded successfully!\n")
 
@@ -31,7 +31,7 @@ f1 = f1_score(y_true, y_pred, zero_division=1) * 100
 # ============================
 # STEP 3: Display results
 # ============================
-print("📊 Model Performance Metrics (Improved MobileNet + LSTM):")
+print("📊 Model Performance Metrics (MobileNet + LSTM):")
 print("------------------------------------------------------------")
 print(f"✅ Accuracy   : {accuracy:.2f}%")
 print(f"✅ Precision  : {precision:.2f}%")
