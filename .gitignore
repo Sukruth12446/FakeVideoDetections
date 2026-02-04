@@ -1,5 +1,17 @@
-venv/
+# Python
 __pycache__/
 *.pyc
-*.pkl
-.env
+
+# Virtual environments
+venv/
+.venv/
+.venv1/
+
+# IDE
+.idea/
+
+# Uploads
+uploads/
+
+# OS
+.DS_Store
