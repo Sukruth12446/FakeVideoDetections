@@ -27,7 +27,6 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ADMIN_EMAIL = "sukruth959@gmail.com"
 ADMIN_PASSWORD = "Sukchinu@1234"
 
-
 # ----- Utility Functions -----
 
 def allowed_file(filename):
